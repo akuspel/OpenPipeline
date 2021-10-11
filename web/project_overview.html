@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+
+<html>
+
+    <head>
+        
+        <title>Open Pipeline</title>
+
+        <!-- Link CSS stylesheet, scripts and EEL -->
+        <link rel="stylesheet" type="text/css" href="css/main.css">
+        <script type="text/javascript" src="js/ui_elements.js"></script>
+        <script type="text/javascript" src="js/functionality.js"></script>
+        <script type="text/javascript" src="/eel.js"></script>
+    
+    </head>
+    
+    <script>
+        
+        // expose eel to python
+        eel.expose(side_bar); // expose to python
+        eel.expose(project_overview);
+        eel.expose(project_editor);
+        
+        // set remove mode
+        function remove_mode() {
+            
+            document.getElementById("remove").title = "Remove Project";
+
+        }
+
+    </script>
+
+    <body onload="top_bar(), remove_mode(), eel.load_side_bar(), eel.load_project_overview()">
+
+        <!-- Load top and side bar -->
+        <div id="top_bar"></div>
+        <div id="side_bar"></div>
+
+        <div style="position:absolute; margin-left: 200px;" id="main_container">
+            <div class="sub_container">
+                <h4 style="padding:6px;">Project Overview</h4>
+                <img src='img/edit.svg' class='container_icon' onclick='link(urls.project_editor)' style="position:absolute; right:20px; top:18px;">
+            </div>
+
+            <!-- Project Main Information -->
+            <div class="sub_container">
+                <h3 id="project_name">Name: project_name</h3>
+                <h4 id="project_directory" style="margin-left:20px;">project_directory</h4>
+                <img src="img/folder.svg" id="folder_icon" class="container_icon" title="Open Directory" onclick="file_explorer(this.title)" style="position:absolute; left:21px; top:92px;">
+            </div>
+            
+            <!-- Project Description -->
+            <div class="sub_container">
+                <h4>Description:</h4>
+                <p id="project_description">project description</p>
+            </div>
+
+            <!-- Team Members container -->
+            <div class="sub_container" id="project_team">
+                <h4 style="padding:6px;">Team:</h4>
+                <img src='img/plus.svg' class='container_icon' onclick='link(urls.member_creation)' style="position:relative; float:right; top:-43px;">
+                <div class="team_member">John Doe (john.doe@email.com)</div>
+            </div>
+        </div>
+
+    </body>
+
+</html>

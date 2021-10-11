@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+
+<html>
+
+    <head>
+        
+        <title>Open Pipeline</title>
+
+        <!-- Link CSS stylesheet, scripts and EEL -->
+        <link rel="stylesheet" type="text/css" href="css/main.css">
+        <script type="text/javascript" src="js/ui_elements.js"></script>
+        <script type="text/javascript" src="/eel.js"></script>
+    
+    </head>
+
+    <script>
+
+        // expose eel
+        eel.expose(side_bar); // expose to html
+    
+    </script>
+
+    <body onload="top_bar(), eel.load_side_bar()">
+        
+        <!-- Load top and side bar -->
+        <div id="top_bar"></div>
+        <div id="side_bar"></div>
+
+        <div style="position:absolute; margin-left: 200px;" id="main_container">
+            <h1>Open Pipeline v 0.01 a</h1>
+            <a href="help.html">Release Notes</a>
+        </div>
+
+    </body>
+
+</html>

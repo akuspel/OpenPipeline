@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+
+<html>
+
+    <head>
+        
+        <title>Open Pipeline</title>
+
+        <!-- Link CSS stylesheet, scripts and EEL -->
+        <link rel="stylesheet" type="text/css" href="css/main.css">
+        <script type="text/javascript" src="js/ui_elements.js"></script>
+        <script type="text/javascript" src="/eel.js"></script>
+    
+    </head>
+    
+    <script>
+        
+        // expose eel to python
+        eel.expose(side_bar); // expose to python
+        eel.expose(link);
+
+    </script>
+
+    <body onload="top_bar(), eel.load_side_bar()">
+
+        <!-- Load top and side bar -->
+        <div id="top_bar"></div>
+        <div id="side_bar"></div>
+
+        <div style="position:absolute; margin-left: 200px;" id="main_container">
+            <div class="sub_container"> <h4 style="padding:6px;">Project Creation</h4></div>
+
+            <!-- Project Main Information -->
+            <div class="sub_container">
+                <h3>Name:</h3>
+                <input type="text" id="project_name" style="position:absolute; left:160px; top:64px; width:300px; border-radius:5px;">
+                <h4>Directory:</h4>
+                <input type="text" id="project_directory" style="position:relative; left:140px; bottom:35px; width:300px; border-radius:5px;">
+            </div>
+            
+            <!-- Project Description -->
+            <div class="sub_container">
+                <h4>Description:</h4>
+                <textarea id="project_description" style="min-width:300px; min-height:50px; max-width:700px; max-height:400px; margin-left:140px; border-radius:5px;">Insert Project Description here</textarea>
+            </div>
+
+            <!-- Team Members container -->
+            <div class="sub_container">
+                <h4>Confirm</h4>
+                <button onclick="eel.create_project(document.getElementById('project_name').value, document.getElementById('project_directory').value, document.getElementById('project_description').value)" style="position:relative; bottom:15px; margin-left:140px; border-radius:5px;">Create Project</button>
+            </div>
+        </div>
+
+    </body>
+
+</html>

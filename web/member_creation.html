@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+
+<html>
+
+    <head>
+        
+        <title>Open Pipeline</title>
+
+        <!-- Link CSS stylesheet, scripts and EEL -->
+        <link rel="stylesheet" type="text/css" href="css/main.css">
+        <script type="text/javascript" src="js/ui_elements.js"></script>
+        <script type="text/javascript" src="/eel.js"></script>
+    
+    </head>
+    
+    <script>
+        
+        // expose eel to python
+        eel.expose(side_bar); // expose to python
+        eel.expose(link);
+
+    </script>
+
+    <body onload="top_bar(), eel.load_side_bar()">
+
+        <!-- Load top and side bar -->
+        <div id="top_bar"></div>
+        <div id="side_bar"></div>
+
+        <div style="position:absolute; margin-left: 200px;" id="main_container">
+            <div class="sub_container"> <h4 style="padding:6px;">Add Team Member</h4></div>
+
+            <!-- Project Main Information -->
+            <div class="sub_container">
+                <h4>Name:</h4>
+                <input type="text" id="member_name" style="position:absolute; left:160px; top:64px; width:300px; border-radius:5px;">
+                <h4>Email:</h4>
+                <input type="text" id="member_email" style="position:relative; left:140px; bottom:35px; width:300px; border-radius:5px;">
+                <h4>Role:</h4>
+                <select name="Role" id="member_role" style="position:relative; left:140px; bottom:33px; width:100px; text-align:center; border-radius:5px;">
+                    <option value="artist" data-icon="glyphicon-music">Artist</option>
+                    <option value="director" data-icon="glyphicon-music">Director</option>
+                    <option value="producer" data-icon="glyphicon-music">Producer</option>
+                    <option value="modeler" data-icon="glyphicon-music">Modeler</option>
+                    <option value="animator" data-icon="glyphicon-music">Animator</option>
+                    <option value="coder" data-icon="glyphicon-music">Coder</option>
+                </select>
+            </div>
+            
+
+            <!-- Team Members container -->
+            <div class="sub_container">
+                <h4>Confirm</h4>
+                <button onclick="eel.add_member(document.getElementById('member_name').value, document.getElementById('member_email').value, document.getElementById('member_role').value)" style="position:relative; bottom:15px; margin-left:140px; border-radius:5px;">Add Member</button>
+            </div>
+        </div>
+
+    </body>
+
+</html>
