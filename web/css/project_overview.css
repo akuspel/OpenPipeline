@@ -1,0 +1,17 @@
+/* container icon */
+#container_icon {
+
+    height: 16px;
+    margin: 3px;
+    padding: 2px;
+
+    background-color: rgba(255, 255, 255, 0);
+
+}
+
+#container_icon:hover {
+
+    background-color: rgba(255, 255, 255, 0.3);
+    border-radius: 12px;
+
+}

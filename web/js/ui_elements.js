@@ -1,16 +1,50 @@
 // set up project overview
-function project_overview(name, directory, description, team, exists) {
+function project_overview(name, directory, description, team, path, project_file) {
 
+    // set project overview attributes
     document.getElementById("project_name").innerText = "Name: " + name;
     document.getElementById("project_directory").innerText = directory;
     document.getElementById("project_description").innerText = description;
 
     document.getElementById("project_team").innerHTML = team;
+    
+    // does path exist
+    if (path != 1) {
 
-    if (exists == false) {
-        document.getElementById("folder_icon").src = "img/add_folder.svg";
-        document.getElementById("folder_icon").title = "Add Directory";
-        document.getElementById("project_directory").style = "color:rgb(150,30,30); margin-left:20px;";
+        if (path == 0) {
+
+            // if path doesn't exist, make it possible to add
+            document.getElementById("folder_icon").src = "img/add_folder.svg";
+            document.getElementById("folder_icon").title = "Add Directory";
+            document.getElementById("project_directory").style = "color:rgb(150,30,30); margin-left:20px;";
+
+        } else {
+
+            // if path is invalid, make the user feel bad
+            document.getElementById("folder_icon").src = "img/error.svg";
+            document.getElementById("folder_icon").title = "Invalid Directory";
+            document.getElementById("project_directory").style = "color:rgb(150,30,30); margin-left:20px;";
+        }
+        
+        
+        // since path doesn't exist, project file cannot exist
+        document.getElementById("project_files_button").hidden = true;
+        document.getElementById("project_files_text").textContent = "Project Path is False!";
+
+    } else if (project_file == true) {
+
+        // project file exists
+        document.getElementById("project_files_button").onclick = link(urls.main);
+        document.getElementById("project_files_button").src = "img/edit.svg";
+        document.getElementById("project_files_button").title = "Edit Project Files";
+        document.getElementById("project_files_text").style = "margin-left:20px;";
+        document.getElementById("project_files_text").textContent = "Project Files are Set Up";
+
+    } else {
+        
+        // path exists, but project file does not
+        console.log("your mom is fat as fuck")
+
     }
 
     console.log("Project Overview loaded")

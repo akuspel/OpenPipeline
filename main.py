@@ -1,5 +1,6 @@
 import eel, os, subprocess, json
 from json_backend import *
+from project_backend import *
 
 # variables
 
@@ -14,6 +15,8 @@ class Current():
     # currently open stuff
     open_project = ""
     open_member = ""
+
+    open_projectfile = {}
 
 # constants
 
@@ -34,6 +37,21 @@ def set_open_member(member):
 
     # set currently open member
     Current.open_member = member.split(" | ")
+
+
+@eel.expose
+def create_project_files():
+
+    project_file = projects[Current.open_project][0]
+    # add / to end
+    if project_file[-1] != "/": project_file += "/"
+    project_file += "project.json"
+
+    # create project
+    save_json(project_file, ProjectFiles.project_template)
+
+    # load thing
+    load_project_overview()
 
 @eel.expose
 def create_project(name, directory, description):
@@ -191,7 +209,8 @@ def load_project_overview():
     directory = project[0]
     description = project[1]
 
-    # team innerHTML
+
+    # team container innerHTML
     team = "<h4 style='padding:6px;''>Team:</h4>"
     team += "<img src='img/plus.svg' class='container_icon' onclick='link(urls.member_creation)' style='position:relative; float:right; top:-43px;'>"
 
@@ -199,23 +218,46 @@ def load_project_overview():
     for member in project[2]:
         team += f"<div class='team_member' title='{member[0]} | {member[1]} | {member[2]}' onclick='link(urls.member_editor), eel.set_open_member(this.title)'>{member[0]} ({member[1]}) ({member[2]})</div>"
     
+
     # check if directory exists
+
+    # path variable to return to html (1 = path exists, 0 = path doesn't exist but is possible, -1 path error)
     path = directory
-    # add / to end of path
-    if len(path) > 0:
+    # check if dir length is greater than 0 and it links to a drive
+    if len(path) > 0 and path[1:3] == ":/":
+        # add / to end of path
         if path[-1] != "/": path += "/"
     else:
         directory = "no path"
+        path = -1
 
     # does path exist
-    if os.path.exists(path):
-        path = True
-    else:
-        path = False
+    if path != -1:
+        if os.path.exists(path):
+            path = 1
+        else:
+            path = 0
+
+
+    # project file variable to return to html, if project file exists
+    project_file = directory
+    project_exists = False
+    # if path exists
+    if path == 1:
+        # add / to end of path
+        if project_file[-1] != "/": project_file += "/"
+        # add project.json to end
+        project_file += "project.json"
+
+        # does file exist
+        project_exists = os.path.isfile(project_file)
+    
+    # load projectfile
+    if project_exists == True: Current.open_projectfile = load_json(project_file)
 
 
     # update ui
-    eel.project_overview(name, directory, description, team, path)
+    eel.project_overview(name, directory, description, team, path, project_exists)
     
     print("Project Overview loaded")
 

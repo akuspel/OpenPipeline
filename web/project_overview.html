@@ -8,6 +8,7 @@
 
         <!-- Link CSS stylesheet, scripts and EEL -->
         <link rel="stylesheet" type="text/css" href="css/main.css">
+        <link rel="stylesheet" type="text/css" href="css/project_overview.css">
         <script type="text/javascript" src="js/ui_elements.js"></script>
         <script type="text/javascript" src="js/functionality.js"></script>
         <script type="text/javascript" src="/eel.js"></script>
@@ -25,6 +26,7 @@
         function remove_mode() {
             
             document.getElementById("remove").title = "Remove Project";
+            document.getElementsByClassName("path_exists").style = "color:white;";
 
         }
 
@@ -51,15 +53,22 @@
             
             <!-- Project Description -->
             <div class="sub_container">
-                <h4>Description:</h4>
+                <h4 style="padding:6px;">Description:</h4>
                 <p id="project_description">project description</p>
             </div>
 
             <!-- Team Members container -->
             <div class="sub_container" id="project_team">
                 <h4 style="padding:6px;">Team:</h4>
-                <img src='img/plus.svg' class='container_icon' onclick='link(urls.member_creation)' style="position:relative; float:right; top:-43px;">
+                <img src='img/plus.svg' class='container_icon' onclick='link(urls.member_creation)' style="position:relative; float:right; top:-79px;">
                 <div class="team_member">John Doe (john.doe@email.com)</div>
+            </div>
+
+            <!-- Project Files container -->
+            <div class="sub_container" id="project_files">
+                <h3 style="padding:6px;">Project Files</h3>
+                <h4 style="color:rgb(150,30,30); margin-left:20px;" id="project_files_text">Project File does not exist</h4>
+                <img src='img/tools.svg' class='container_icon' id="project_files_button" onclick='eel.create_project_files()' style="position:relative; float:left; top:-38px;" title="Set Up Project Files">
             </div>
         </div>
 

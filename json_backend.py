@@ -5,9 +5,37 @@ class OpenPipeline():
 
     filepath = os.path.expanduser("~").replace("\\", "/") + "/AppData/Local/OpenPipeline/"
     projects = filepath + "projects.json"
+    
+    porjectfile = "project.json"
 
 
-# just backend
+
+# json load and save
+def load_json(path):
+
+    # load json file
+    with open(path, "r") as file:
+
+        # load json
+        data = json.load(file)
+    
+    file.close()
+
+    # return loaded variable
+    return(data)
+
+def save_json(path, data):
+
+    # open json file
+    with open(path, "w") as file:
+
+        # save json data
+        json.dump(data, file)
+    
+    file.close()
+
+
+# projects dict load and save
 def load_projects():
 
     # does path exist
@@ -35,7 +63,6 @@ def load_projects():
 
     # return loaded variable
     return(projects)
-
 
 def save_projects(projects):
 
