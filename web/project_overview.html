@@ -41,7 +41,7 @@
         <div style="position:absolute; margin-left: 200px;" id="main_container">
             <div class="sub_container">
                 <h4 style="padding:6px;">Project Overview</h4>
-                <img src='img/edit.svg' class='container_icon' onclick='link(urls.project_editor)' style="position:absolute; right:20px; top:18px;">
+                <img src='img/edit.svg' class='container_icon' onclick='link(urls.project_editor)' title="Edit Project Details" style="position:absolute; right:20px; top:18px;">
             </div>
 
             <!-- Project Main Information -->
@@ -60,7 +60,7 @@
             <!-- Team Members container -->
             <div class="sub_container" id="project_team">
                 <h4 style="padding:6px;">Team:</h4>
-                <img src='img/plus.svg' class='container_icon' onclick='link(urls.member_creation)' style="position:relative; float:right; top:-79px;">
+                <img src='img/plus.svg' class='container_icon' onclick='link(urls.member_creation)' title="Add Team Member" style="position:relative; float:right; top:-79px;">
                 <div class="team_member">John Doe (john.doe@email.com)</div>
             </div>
 
@@ -69,6 +69,13 @@
                 <h3 style="padding:6px;">Project Files</h3>
                 <h4 style="color:rgb(150,30,30); margin-left:20px;" id="project_files_text">Project File does not exist</h4>
                 <img src='img/tools.svg' class='container_icon' id="project_files_button" onclick='eel.create_project_files()' style="position:relative; float:left; top:-38px;" title="Set Up Project Files">
+            </div>
+
+            <!-- Project Scenes container -->
+            <div class="sub_container" id="project_scenes" hidden>
+                <h3 style="padding:6px; position:relative; left:-20px;">Project Tools</h3>
+                <div class="container_button"><img src="img/scene.svg" class="container_button_icon">Scene Editor</div>
+                <div class="container_button"><img src="img/clock.svg" class="container_button_icon">Task Editor</div>
             </div>
         </div>
 

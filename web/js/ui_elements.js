@@ -34,11 +34,13 @@ function project_overview(name, directory, description, team, path, project_file
     } else if (project_file == true) {
 
         // project file exists
-        document.getElementById("project_files_button").onclick = link(urls.main);
+        document.getElementById("project_files_button").onclick = "link(urls.main)";
         document.getElementById("project_files_button").src = "img/edit.svg";
         document.getElementById("project_files_button").title = "Edit Project Files";
         document.getElementById("project_files_text").style = "margin-left:20px;";
         document.getElementById("project_files_text").textContent = "Project Files are Set Up";
+
+        document.getElementById("project_scenes").hidden = false;
 
     } else {
         

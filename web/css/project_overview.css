@@ -1,17 +1,29 @@
-/* container icon */
-#container_icon {
 
-    height: 16px;
-    margin: 3px;
-    padding: 2px;
+/* team member */
+.team_member {
 
-    background-color: rgba(255, 255, 255, 0);
+    height: minmax(20px, 80px);
+    width: calc(100% - 20px);
 
+    margin: 5px;
+    padding: 5px;
+
+    float: top;
+
+    background-color: rgb(90, 90, 90, 0);
+    color: white;
+
+    border: 0px;
+
+    font-family: monospace;
+    text-align: left;
+    text-overflow: clip;
+    user-select: none;
 }
 
-#container_icon:hover {
+.team_member:hover {
 
     background-color: rgba(255, 255, 255, 0.3);
-    border-radius: 12px;
+    border-radius: 5px;
 
 }

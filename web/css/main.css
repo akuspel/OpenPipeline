@@ -70,13 +70,16 @@ body {
 
 }
 
-/* team member */
-.team_member {
+/* container button */
+.container_button {
 
     height: minmax(20px, 80px);
-    width: calc(100% - 10px);
+    min-width: 40px;
+    max-width: 200px;
 
     margin: 5px;
+
+    padding: 5px;
 
     float: top;
 
@@ -91,10 +94,19 @@ body {
     user-select: none;
 }
 
-.team_member:hover {
+.container_button:hover {
 
     background-color: rgba(255, 255, 255, 0.3);
     border-radius: 5px;
+
+}
+
+.container_button_icon {
+
+    width: 15px;
+    margin-right: 5px;
+
+    float: left;
 
 }
 

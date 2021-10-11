@@ -216,7 +216,8 @@ def load_project_overview():
 
     # add members to team
     for member in project[2]:
-        team += f"<div class='team_member' title='{member[0]} | {member[1]} | {member[2]}' onclick='link(urls.member_editor), eel.set_open_member(this.title)'>{member[0]} ({member[1]}) ({member[2]})</div>"
+        team += f"<div class='team_member' title='{member[0]} | {member[1]} | {member[2]}' onclick='link(urls.member_editor), eel.set_open_member(this.title)'>"
+        team += f"<img src='img/person.svg' class='container_button_icon'>{member[0]} ({member[1]}) ({member[2]})</div>"
     
 
     # check if directory exists
