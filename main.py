@@ -1,4 +1,5 @@
-import eel, os, subprocess
+import eel, os, subprocess, json
+from json_backend import *
 
 # variables
 
@@ -56,6 +57,9 @@ def create_project(name, directory, description):
 
         # open project overview
         eel.link("project_overview.html")
+        
+        # save projects to json
+        save_projects(projects)
 
 @eel.expose
 def edit_project(name, directory, description):
@@ -86,6 +90,9 @@ def edit_project(name, directory, description):
         # open project overview
         eel.link("project_overview.html")
 
+        # save projects to json
+        save_projects(projects)
+
 @eel.expose
 def remove_project():
 
@@ -97,6 +104,9 @@ def remove_project():
 
     # reset variables
     Current.open_project = ""
+    
+    # save projects to json
+    save_projects(projects)
 
 # members
 @eel.expose
@@ -120,6 +130,9 @@ def add_member(name, email, role):
         # open project overview
         eel.link("project_overview.html")
 
+        # save projects to json
+        save_projects(projects)
+
 @eel.expose
 def remove_member():
 
@@ -128,6 +141,9 @@ def remove_member():
 
     # reset variables
     Current.open_member = ""
+    
+    # save projects to json
+    save_projects(projects)
 
 
 # usability
@@ -186,7 +202,10 @@ def load_project_overview():
     # check if directory exists
     path = directory
     # add / to end of path
-    if path[-1] != "/": path += "/"
+    if len(path) > 0:
+        if path[-1] != "/": path += "/"
+    else:
+        directory = "no path"
 
     # does path exist
     if os.path.exists(path):
@@ -238,7 +257,10 @@ def load_member_editor():
 # run eel if main
 if __name__ == "__main__":
 
+    # load json
+    projects = load_projects()
+
     # init eel at directory "web"
     eel.init("web")
     # start eel
-    eel.start("main.html", size = (800, 600))
+    eel.start("main.html")
