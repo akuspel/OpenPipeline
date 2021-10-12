@@ -1,4 +1,4 @@
-import eel, os, subprocess, json
+import eel, os, subprocess
 from json_backend import *
 from project_backend import *
 
@@ -17,6 +17,8 @@ class Current():
     open_member = ""
 
     open_projectfile = {}
+
+    open_scene = ""
 
 # constants
 
@@ -126,6 +128,54 @@ def remove_project():
     # save projects to json
     save_projects(projects)
 
+
+# scenes
+@eel.expose
+def add_scene(scene, root):
+
+    # load current project file to project variable
+    project = Current.open_projectfile
+
+    # does scene already exist
+    if scene not in project["scenes"] and len(scene) > 0:
+
+        project_file = projects[Current.open_project][0]
+        # add / to end
+        if project_file[-1] != "/": project_file += "/"
+        project_file += "project.json"
+
+        # assign new scene key to scenes with root
+        project["scenes"][scene] = {"root" : root}
+
+        # set current projectfile
+        Current.open_projectfile = project
+
+        # save project file
+        save_json(project_file, project)
+
+@eel.expose
+def remove_scene(scene):
+
+    # load current project file to project variable
+    project = Current.open_projectfile
+
+    # project file path
+    project_file = projects[Current.open_project][0]
+    # add / to end
+    if project_file[-1] != "/": project_file += "/"
+    project_file += "project.json"
+
+    # assign new scene key to scenes with root
+    project["scenes"].pop(scene)
+
+    # set current projectfile
+    Current.open_projectfile = project
+
+    # save project file
+    save_json(project_file, project)
+
+
+
 # members
 @eel.expose
 def add_member(name, email, role):
@@ -170,6 +220,7 @@ def explore(path):
     # explorer would choke on forward slashes
     path = os.path.normpath(path)
 
+    # make dir or open dir
     if os.path.isdir(path):
         subprocess.run([FILEBROWSER_PATH, path])
     else:
@@ -295,6 +346,56 @@ def load_member_editor():
     eel.member_editor(name, email, role)
     
     print("Member Editor loaded")
+
+
+# scene editor
+@eel.expose
+def load_scene_overview():
+
+    project = Current.open_projectfile
+
+    # set attributes
+    directory = project["scene_directory"]
+
+    # team container innerHTML
+    scenes = "<h4 style='padding:6px;'>Scenes:</h4>"
+    # plus button
+    scenes += "<img src='img/plus.svg' class='container_icon' onclick='open_scene_creator()' title='Add New Scene' style='position:relative; float:right; top:-46px;''>"
+
+    # add members to team
+    for scene in project["scenes"]:
+
+        # root path
+        root = project['scenes'][scene]['root']
+        # add scene item
+        scenes += f"<div class='container_item' title='{scene}' onclick='link(urls.scene_editor), eel.set_open_member(this.title)'>"
+        scenes += f"<img src='img/scene.svg' class='container_button_icon'>Scene: ({scene}) -- Dir: ({root}/{scene})</div>"
+    
+
+    # check if directory exists
+
+    # path variable to return to html
+    path = projects[Current.open_project][0]
+    # check if dir length is greater than 0 and it links to a drive
+    if len(path) > 0 and path[1:3] == ":/":
+        # add / to end of path
+        if path[-1] != "/": path += "/"
+
+    # make directory the full path
+    directory = path + directory
+
+    # does path exist
+    if os.path.exists(directory):
+        path = 1
+    else:
+        path = 0
+
+    # update ui
+    eel.scene_overview(directory, path, scenes)
+    
+    print("Scene Overview loaded")
+
+
 
 
 # run eel if main

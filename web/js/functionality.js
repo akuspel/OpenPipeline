@@ -1,12 +1,12 @@
 
 // file explorer
-function file_explorer(mode) {
+function file_explorer(mode, redirect, id) {
 
     if (mode == "Open Directory") {
-        eel.explore(document.getElementById("project_directory").innerText);
+        eel.explore(document.getElementById(id).innerText);
     } else if (mode == "Add Directory") {
-        eel.explore(document.getElementById("project_directory").innerText);
-        link(urls.project_overview);
+        eel.explore(document.getElementById(id).innerText);
+        link(redirect);
     }
 
 }

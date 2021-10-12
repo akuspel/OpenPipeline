@@ -48,7 +48,7 @@
             <div class="sub_container">
                 <h3 id="project_name">Name: project_name</h3>
                 <h4 id="project_directory" style="margin-left:20px;">project_directory</h4>
-                <img src="img/folder.svg" id="folder_icon" class="container_icon" title="Open Directory" onclick="file_explorer(this.title)" style="position:absolute; left:21px; top:92px;">
+                <img src="img/folder.svg" id="folder_icon" class="container_icon" title="Open Directory" onclick="file_explorer(this.title, urls.project_overview, 'project_directory')" style="position:absolute; left:21px; top:92px;">
             </div>
             
             <!-- Project Description -->
@@ -72,10 +72,10 @@
             </div>
 
             <!-- Project Scenes container -->
-            <div class="sub_container" id="project_scenes" hidden>
+            <div class="sub_container" id="project_tools" hidden>
                 <h3 style="padding:6px; position:relative; left:-20px;">Project Tools</h3>
-                <div class="container_button" onclick="link(urls.programs_editor)"><img src="img/software.svg" class="container_button_icon">Program Editor</div>
-                <div class="container_button"><img src="img/scene.svg" class="container_button_icon">Scene Editor</div>
+                <div class="container_button" onclick="link(urls.program_overview)"><img src="img/software.svg" class="container_button_icon">Program Editor</div>
+                <div class="container_button" onclick="link(urls.scene_overview)"><img src="img/scene.svg" class="container_button_icon">Scene Editor</div>
                 <div class="container_button"><img src="img/clock.svg" class="container_button_icon">Task Editor</div>
             </div>
         </div>

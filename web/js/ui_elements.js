@@ -1,3 +1,27 @@
+// urls
+
+var urls = {
+    main: "main.html",
+    help: "help.html",
+    license: "license.html",
+
+    project_overview: "project_overview.html",
+    project_creation: "project_creation.html",
+    project_editor: "project_editor.html",
+
+    member_creation: "member_creation.html",
+    member_editor: "member_editor.html",
+
+    program_overview: "program_overview.html",
+    scene_overview: "scene_overview.html"
+}
+
+// linking through divs
+function link(url) {
+    
+    window.location = url;
+}
+
 // set up project overview
 function project_overview(name, directory, description, team, path, project_file) {
 
@@ -40,12 +64,12 @@ function project_overview(name, directory, description, team, path, project_file
         document.getElementById("project_files_text").style = "margin-left:20px;";
         document.getElementById("project_files_text").textContent = "Project Files are Set Up";
 
-        document.getElementById("project_scenes").hidden = false;
+        document.getElementById("project_tools").hidden = false;
 
     } else {
         
         // path exists, but project file does not
-        console.log("your mom is fat as fuck")
+        console.log("Nothing to see here ;)")
 
     }
 
@@ -63,6 +87,32 @@ function project_editor(name, directory, description) {
     console.log("Project Editor loaded")
 
 }
+
+// set up scene overview
+function scene_overview(directory, path, scenes) {
+
+    // set project overview attributes
+    document.getElementById("scene_directory").innerText = directory;
+
+    document.getElementById("project_scenes").innerHTML = scenes;
+    
+    // does path exist
+    if (path == 1) {
+
+        // path exists, celebrate!!
+
+    } else {
+
+        // if path doesn't exist, make it possible to add
+        document.getElementById("folder_icon").src = "img/add_folder.svg";
+        document.getElementById("folder_icon").title = "Add Directory";
+        document.getElementById("scene_directory").style = "color:rgb(150,30,30); margin-left:20px;";
+    }
+    
+    console.log("Scene Overview loaded")
+
+}
+
 
 // set up member editor
 function member_editor(name, email, role) {
@@ -84,6 +134,7 @@ function member_edit(name, email, role) {
 }
 
 
+
 // closing side bar
 function close_side_bar() {
 
@@ -101,28 +152,6 @@ function close_side_bar() {
 
     }
    
-}
-
-// linking through divs
-function link(url) {
-    
-    window.location = url;
-
-}
-
-var urls = {
-    main: "main.html",
-    help: "help.html",
-    license: "license.html",
-
-    project_overview: "project_overview.html",
-    project_creation: "project_creation.html",
-    project_editor: "project_editor.html",
-
-    member_creation: "member_creation.html",
-    member_editor: "member_editor.html",
-
-    programs_editor: "programs_editor.html"
 }
 
 // remove tool

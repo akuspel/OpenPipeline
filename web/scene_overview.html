@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+
+<html>
+
+    <head>
+        
+        <title>Open Pipeline</title>
+
+        <!-- Link CSS stylesheet, scripts and EEL -->
+        <link rel="stylesheet" type="text/css" href="css/main.css">
+        <link rel="stylesheet" type="text/css" href="css/project_overview.css">
+        <script type="text/javascript" src="js/ui_elements.js"></script>
+        <script type="text/javascript" src="js/functionality.js"></script>
+        <script type="text/javascript" src="/eel.js"></script>
+    
+    </head>
+    
+    <script>
+        
+        // expose eel to python
+        eel.expose(side_bar); // expose to python
+        eel.expose(scene_overview);
+
+
+        // scene editor
+        function open_scene_creator() {
+
+            // hide prompt
+            document.getElementById("scene_creator").hidden = false;
+
+            // set h3 name
+            document.getElementById("scene_creator_title").innerText = "Create Scene"
+
+            // reset values
+            document.getElementById("scene_name").value = "";
+            document.getElementById("scene_root").value = "";
+
+        }
+
+
+        function close_scene_creator() {
+
+            // hide prompt
+            document.getElementById("scene_creator").hidden = true;
+
+            // reset values
+            document.getElementById("scene_name").value = "";
+            document.getElementById("scene_root").value = "";
+
+        }
+        
+
+    </script>
+
+    <body onload="top_bar(), eel.load_side_bar(), eel.load_scene_overview()">
+
+        <!-- Load top and side bar -->
+        <div id="top_bar"></div>
+        <div id="side_bar"></div>
+
+        <div style="position:absolute; margin-left: 200px;" id="main_container">
+            <div class="sub_container">
+                <h3 style="padding:6px;">Scene Editor</h3>
+                <h4 id="scene_directory" style="margin-left:20px;">scene_directory</h4>
+                <img src="img/folder.svg" id="folder_icon" class="container_icon" title="Open Directory" onclick="file_explorer(this.title, urls.scene_overview, 'scene_directory')" style="position:absolute; left:21px; top:56px;">
+            </div>
+
+            <!-- Associated Programs container -->
+            <div class="sub_container" id="project_scenes">
+                <h4 style="padding:6px;">Scenes:</h4>
+                <img src='img/plus.svg' class='container_icon' onclick='open_scene_creator()' title="Add Associated Program" style="position:relative; float:right; top:-46px;">
+            </div>
+
+            <!-- accept -->
+            
+            <div class="container_button" onclick="link(urls.project_overview)" style="margin-top:15px; color:black;"><img src="img/return.svg" class="container_button_icon">Return</div>
+            
+
+            <!-- Scene editor -->
+            <div class="floating_container" id="scene_creator" hidden>
+                <img src="img/return.svg" class="container_icon" onclick="close_scene_creator()" style="float:right;">
+                <h3 id="scene_creator_title">Create Scene</h3>
+                <p>
+                Scene name: <input type="text" id="scene_name"><br>
+                Scene root: <input type="text" id="scene_root">
+                </p>
+                <div class="container_button" onclick="eel.add_scene(document.getElementById('scene_name').value, document.getElementById('scene_root').value), eel.load_scene_overview(), close_scene_creator()"><img src="img/check.svg" class="container_button_icon">Accept</div>
+            </div>
+
+        </div>
+
+    </body>
+
+</html>
