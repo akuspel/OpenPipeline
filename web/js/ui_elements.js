@@ -120,7 +120,9 @@ var urls = {
     project_editor: "project_editor.html",
 
     member_creation: "member_creation.html",
-    member_editor: "member_editor.html"
+    member_editor: "member_editor.html",
+
+    programs_editor: "programs_editor.html"
 }
 
 // remove tool
