@@ -19,6 +19,7 @@ class Current():
     open_projectfile = {}
 
     open_scene = ""
+    open_node = ""
 
 # constants
 
@@ -145,9 +146,7 @@ def add_scene(scene, root):
     if scene not in project["scenes"] and len(scene) > 0:
 
         project_file = projects[Current.open_project][0]
-        # add / to end
-        if project_file[-1] != "/": project_file += "/"
-        project_file += "project.json"
+        project_file = os.path.join(project_file, "project.json").replace("\\", "/")
 
         # assign new scene key to scenes with root
         project["scenes"][scene] = {"root" : root}
@@ -158,27 +157,133 @@ def add_scene(scene, root):
         # save project file
         save_json(project_file, project)
 
+# scenes
 @eel.expose
-def remove_scene(scene):
+def edit_scene(scene, root):
+
+    # load current project file to project variable
+    project = Current.open_projectfile
+
+    # does scene already exist
+    if len(scene) > 0:
+
+        project_file = projects[Current.open_project][0]
+        project_file = os.path.join(project_file, "project.json").replace("\\", "/")
+
+        # scene key
+        scene_key = project["scenes"][Current.open_scene]
+
+        # if scene name changed
+        if Current.open_scene != scene:
+
+            # remove old scene
+            project["scenes"].pop(Current.open_scene)
+
+            # change open scene to new name
+            Current.open_scene = scene
+
+        # edit scene key
+        scene_key["root"] = root
+        # assign scene key to scenes
+        project["scenes"][scene] = scene_key
+
+        # set current projectfile
+        Current.open_projectfile = project
+
+        # save project file
+        save_json(project_file, project)
+
+@eel.expose
+def remove_scene():
 
     # load current project file to project variable
     project = Current.open_projectfile
 
     # project file path
     project_file = projects[Current.open_project][0]
-    # add / to end
-    if project_file[-1] != "/": project_file += "/"
-    project_file += "project.json"
+    project_file = os.path.join(project_file, "project.json").replace("\\", "/")
 
     # assign new scene key to scenes with root
-    project["scenes"].pop(scene)
+    project["scenes"].pop(Current.open_scene)
 
     # set current projectfile
     Current.open_projectfile = project
+    Current.open_scene = ""
 
     # save project file
     save_json(project_file, project)
 
+# scene nodes
+@eel.expose
+def add_node(name, path, type, programs, inport, outport, mode):
+
+    if mode == "Add Node":
+        if len(name) > 0 and name not in Current.open_projectfile["scenes"][Current.open_scene]:
+
+            # create node key
+            node = [path, type, programs, [inport, outport]]
+
+            # add member to current project
+            Current.open_projectfile["scenes"][Current.open_scene][name] = node
+
+            print("Node Created Sucessfully")
+
+            # reload ui
+            eel.close_node_editor()
+            load_scene_editor()
+
+            # project file path
+            project_file = projects[Current.open_project][0]
+            project_file = os.path.join(project_file, "project.json").replace("\\", "/")
+
+            # save projects to json
+            save_json(project_file, Current.open_projectfile)
+    
+    elif mode == "Edit Node":
+        if len(name) > 0:
+
+            # did name change
+            if name != Current.open_node:
+                # remove old entry
+                Current.open_projectfile["scenes"][Current.open_scene].pop(Current.open_node)
+
+            # create node key
+            node = [path, type, programs, [inport, outport]]
+
+            # add member to current project
+            Current.open_projectfile["scenes"][Current.open_scene][name] = node
+
+            print("Node Created Sucessfully")
+
+            # reload ui
+            eel.close_node_editor()
+            load_scene_editor()
+
+            # project file path
+            project_file = projects[Current.open_project][0]
+            project_file = os.path.join(project_file, "project.json").replace("\\", "/")
+
+            # save projects to json
+            save_json(project_file, Current.open_projectfile)
+
+@eel.expose
+def remove_node(node):
+    
+    # remove node
+    Current.open_projectfile["scenes"][Current.open_scene].pop(node)
+    
+    print("Node Removed Sucessfully")
+
+    # reload ui
+    eel.close_node_editor()
+    load_scene_editor()
+
+    # project file path
+    project_file = projects[Current.open_project][0]
+    project_file = os.path.join(project_file, "project.json").replace("\\", "/")
+
+    # save projects to json
+    save_json(project_file, Current.open_projectfile)
 
 
 # members
@@ -407,7 +512,7 @@ def load_scene_editor():
     # node container innerHTML
     nodes = "<div class='node' style='background-color:rgba(0,0,0,0);'>"
     # plus button
-    nodes += "<img src='img/plus.svg' class='container_icon' style='float:right;' onclick='open_node_creator()'><h3 class='node_title'>Nodes:</h3></div>"
+    nodes += "<img src='img/plus.svg' class='container_icon' style='float:right;' onclick='open_node_editor(true)'><h3 class='node_title'>Nodes:</h3></div>"
 
     # add members to team
     for node in scene:
@@ -415,30 +520,38 @@ def load_scene_editor():
         # ignore root node
         if node != "root":
 
+            nodes += "<div class='node' style='overflow:hidden; text-overflow:ellipsis;'>"
             # buttons !!! ADD REMOVE AND NODE EDIT FUNCTIONALITY HERE !!!
-            nodes += "<img src='img/error.svg' class='container_icon' style='float:right;'><img src='img/edit.svg' class='container_icon' style='float:right;'>"
+            nodes += f"<img src='img/error.svg' class='container_icon' id='{node}' onclick='eel.remove_node(this.id)' style='float:right;'><img src='img/edit.svg' class='container_icon' style='float:right;' title='{node}' onclick='eel.load_node_editor(this.title)'>"
             # check if directory exists
-            # node path
-            node_path = os.path.join(projects[Current.open_project][0], root, scene["root"], scene[node][1], node).replace("\\", "/")
+            # node path (project path / scene dir / scene root / current scene / node dir)
+            node_path = os.path.join(projects[Current.open_project][0], Current.open_projectfile["scene_directory"], root, Current.open_scene, scene[node][0]).replace("\\", "/")
+            
+            # is node type dir
+            if scene[node][1] in ("dir", "indir", "outdir"):
+                # does path exist
+                if os.path.isdir(node_path):
+                    nodes += f"<img src='img/folder.svg' title='{node_path}' onclick='eel.explore(this.title)' class='container_icon' style='float:right;'>"
+                else:
+                    nodes += f"<img src='img/add_folder.svg' title='{node_path}' onclick='eel.explore(this.title), eel.load_scene_editor()' class='container_icon' style='float:right;'>"
+            
+            elif scene[node][1] == "link":
 
-            # does path exist
-            if os.path.isdir(node_path):
-                nodes += f"<img src='img/folder.svg' title='{node_path}' onclick='eel.explore(this.title)' class='container_icon' style='float:right;'>"
-            else:
-                nodes += f"<img src='img/add_folder.svg' title='{node_path}' onclick='eel.explore(this.title)' class='container_icon' style='float:right;'>"
+                # web link
+                nodes += f"<img src='img/www.svg' title='{scene[node][0]}' onclick='window.open(this.title)' class='container_icon' style='float:right;'>"
             
             # node name
             nodes += f"<h3 class='node_title'>{node}</h3>"
 
             # node data
-            nodes += f"<h3>Node Dir: {scene[node][0]}</h3>"
-            nodes += f"<h3>Node Type: {scene[node][1]}</h3>"
+            nodes += f"<label>Node Dir: {scene[node][0]}</label><br>"
+            nodes += f"<label>Node Type: {scene[node][1]}</label><br>"
 
             # programs
-            if scene[node][2] != "": nodes += f"<h3>Programs: {scene[node][2]}</h3>"
+            if scene[node][2] != "": nodes += f"<label>Programs: {scene[node][2]}</label><br>"
 
             # ports
-            nodes += f"<label>{str(scene[node][3])}</label></div>"
+            nodes += f"<br><label>{str(scene[node][3])}</label></div>"
 
     # check if directory exists
 
@@ -446,7 +559,7 @@ def load_scene_editor():
     path = projects[Current.open_project][0]
 
     # make directory the full path
-    directory = os.path.join(path, root, scene["root"]).replace("\\", "/")
+    directory = os.path.join(path, Current.open_projectfile["scene_directory"], root, Current.open_scene).replace("\\", "/")
 
     # does path exist
     if os.path.exists(directory):
@@ -455,9 +568,25 @@ def load_scene_editor():
         path = 0
 
     # update ui
-    eel.scene_editor(Current.open_scene, directory, path, nodes)
+    eel.scene_editor(Current.open_scene, root, directory, path, nodes)
     
     print("Scene Editor loaded")
+
+@eel.expose
+def load_node_editor(name):
+
+    # set current node
+    Current.open_node = name
+
+    # load node attributes into var
+    node = Current.open_projectfile["scenes"][Current.open_scene][name]
+
+    # open node editor
+    eel.open_node_editor([ name, node[0], node[3][0], node[3][1] ])
+    
+    print("Node Editor loaded")
+
+
 
 
 # run eel if main

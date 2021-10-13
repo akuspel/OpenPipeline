@@ -10,7 +10,7 @@ html, body {
 }
 
 /* set attributes for common html types */
-a, p, h1, h2, h3, h4, h5, ul {
+a, p, h1, h2, h3, h4, h5, ul, label {
 
     padding-left: 6px;
 
@@ -19,7 +19,7 @@ a, p, h1, h2, h3, h4, h5, ul {
 
 }
 
-button, input, textarea {
+button, input, textarea, select {
 
     border-radius: 5px;
     font-family: monospace;
@@ -58,10 +58,11 @@ body {
 .vertical_sub_container {
 
     float: left;
-    margin-right: 20px;
+    margin-left: 10px;
+    margin-right: 10px;
 
-    width: calc(33% - 20px);
-    min-height: 300px;
+    width: calc(100%/3 - 20px);
+    min-height: 50px;
 
     background-color: rgba(45, 51, 68, 0.3);
 
@@ -90,6 +91,7 @@ body {
 
     margin-left: 10px;
     margin-right: 10px;
+    margin-bottom: 10px;
 
     width: calc(100% - 20px);
     min-height: 30px;

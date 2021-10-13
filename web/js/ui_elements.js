@@ -3,7 +3,7 @@
 var urls = {
     main: "main.html",
     help: "help.html",
-    license: "license.html",
+    license: "https://www.gnu.org/licenses/lgpl-3.0.en.html",
 
     project_overview: "project_overview.html",
     project_creation: "project_creation.html",
@@ -116,10 +116,15 @@ function scene_overview(directory, path, scenes) {
 }
 
 // set up scene editor
-function scene_editor(scene, directory, path, nodes) {
+function scene_editor(scene, root, directory, path, nodes) {
 
     // set project overview attributes
-    document.getElementById("scene").innerText = scene;
+    document.getElementById("scene").innerText = "Scene: " + scene;
+    document.getElementById("scene").title = scene;
+    
+    document.getElementById("root").innerText = "Root dir: " + root;
+    document.getElementById("root").title = root;
+
     document.getElementById("scene_directory").innerText = directory;
 
     document.getElementById("node_container").innerHTML = nodes;
@@ -193,10 +198,17 @@ function remove(mode) {
     
             if (mode == "Remove Project") {
                 eel.remove_project()
+
             } else if (mode == "Remove Member") {
                 eel.remove_member()
                 // change ui
                 link(urls.project_overview)
+
+            } else if (mode == "Remove Scene") {
+                eel.remove_scene()
+                // change ui
+                link(urls.scene_overview)
+
             } else {
                 console.error("Unable to Remove Anything - Is removable object currenly open?")
             }
@@ -213,7 +225,7 @@ function remove(mode) {
 function top_bar() {
     
     console.log("Top Bar loaded");
-    document.getElementById("top_bar").innerHTML="<img src='img/logo.svg' id='logo' onclick='link(urls.main)' title='Home Page'> <div class='top_bar_item'>File</div> <div class='top_bar_item'>Edit</div> <div class='top_bar_item'>Settings</div> <div class='top_bar_item' onclick='link(urls.help)'>Help</div> <div class='top_bar_item' onclick='link(urls.license)'>License</div>  <img src='img/reload.svg' class='top_icon' onclick='top_bar(),eel.load_side_bar()' title='Refresh UI'> <img src='img/trash.svg' id='remove' class='top_icon' onclick='remove(this.title)' title='Remove'>";
+    document.getElementById("top_bar").innerHTML="<img src='img/logo.svg' id='logo' onclick='link(urls.main)' title='Home Page'> <div class='top_bar_item'>File</div> <div class='top_bar_item'>Edit</div> <div class='top_bar_item'>Settings</div> <div class='top_bar_item' onclick='link(urls.help)'>Help</div> <div class='top_bar_item' onclick='window.open(urls.license)'>License</div>  <img src='img/reload.svg' class='top_icon' onclick='location.reload()' title='Refresh UI'> <img src='img/trash.svg' id='remove' class='top_icon' onclick='remove(this.title)' title='Remove'>";
     
 }
 

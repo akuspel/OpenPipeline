@@ -23,13 +23,21 @@
 
 
         // scene editor
-        function open_scene_creator() {
+        function open_scene_editor() {
+
+            // view prompt
+            document.getElementById("scene_editor").hidden = false;
+
+            // reset values
+            document.getElementById("scene_name").value = document.getElementById("scene").title;
+            document.getElementById("scene_root").value = document.getElementById("root").title;
+
+        }
+
+        function close_scene_editor() {
 
             // hide prompt
-            document.getElementById("scene_creator").hidden = false;
-
-            // set h3 name
-            document.getElementById("scene_creator_title").innerText = "Create Scene"
+            document.getElementById("scene_editor").hidden = true;
 
             // reset values
             document.getElementById("scene_name").value = "";
@@ -37,22 +45,65 @@
 
         }
 
+        // node editor
+        function open_node_editor(mode) {
 
-        function close_scene_creator() {
+            // view editor
+            document.getElementById("node_editor").hidden = false;
 
-            // hide prompt
-            document.getElementById("scene_creator").hidden = true;
+            if (mode == true) {
+
+                // title
+                document.getElementById("node_editor_title").innerText = "Add Node";
+
+                // reset values
+                document.getElementById("node_name").value = "";
+                document.getElementById("node_path").value = "";
+                document.getElementById("inport").value = "-1";
+                document.getElementById("outport").value = "-1";
+
+            } else {
+                
+                // title
+                document.getElementById("node_editor_title").innerText = "Edit Node";
+
+                // reset values
+                document.getElementById("node_name").value = mode[0];
+                document.getElementById("node_path").value = mode[1];
+                document.getElementById("inport").value = mode[2];
+                document.getElementById("outport").value = mode[3];
+
+            }
+        }
+
+        function close_node_editor() {
+
+            // view editor
+            document.getElementById("node_editor").hidden = true;
 
             // reset values
-            document.getElementById("scene_name").value = "";
-            document.getElementById("scene_root").value = "";
+            document.getElementById("node_name").value = "";
+            document.getElementById("node_path").value = "";
+            document.getElementById("inport").value = "-1";
+            document.getElementById("outport").value = "-1";
+
+        }
+
+        eel.expose(open_node_editor);
+        eel.expose(close_node_editor);
+
+        
+        // set remove mode
+        function remove_mode() {
+            
+            document.getElementById("remove").title = "Remove Scene";
 
         }
         
 
     </script>
 
-    <body onload="top_bar(), eel.load_scene_editor()">
+    <body onload="top_bar(), remove_mode(), eel.load_scene_editor()">
 
         <!-- Load top and side bar -->
         <div id="top_bar"></div>
@@ -61,19 +112,25 @@
             <div class="sub_container">
                 <div class="container_button" onclick="link(urls.scene_overview)" style="margin-bottom:2px; color:black; float:right;"><img src="img/return.svg" class="container_button_icon">Return</div>
                 <h3 style="padding:6px;">Scene Editor</h3>
+                <img src="img/folder.svg" id="folder_icon" class="container_icon" title="Open Directory" onclick="file_explorer(this.title, urls.scene_editor, 'scene_directory')" style="position:relative; float:left; top:-3px;">
+                <h4 id="scene_directory" style="margin-left:20px;">scene_directory</h4>
             </div>
             
             <!-- Left Panel -->
             <div class="vertical_sub_container">
-                <h3 id="scene">scene</h3>
-                <img src="img/folder.svg" id="folder_icon" class="container_icon" title="Open Directory" onclick="file_explorer(this.title, urls.scene_overview, 'scene_directory')" style="position:relative; float:left; top:56px;">
-                <h4 id="scene_directory" style="margin-left:20px;">scene_directory</h4>
+
+                <div class="node" style="background-color:rgba(0,0,0,0);"><img src="img/edit.svg" class="container_icon" style="float:right;" onclick="open_scene_editor()"><h3 class="node_title">Scene Information:</h3></div>
+
+                <div class="node">
+                    <label id="scene">scene</label><br>
+                    <label id="root">root</label>
+                </div>
             </div>
 
             <!-- Middle Panel -->
             <div class="vertical_sub_container" id="node_container">
 
-                <div class="node" style="background-color:rgba(0,0,0,0);"><img src="img/plus.svg" class="container_icon" style="float:right;" onclick="open_node_creator()"><h3 class="node_title">Nodes:</h3></div>
+                <div class="node" style="background-color:rgba(0,0,0,0);"><img src="img/plus.svg" class="container_icon" style="float:right;" onclick="open_node_editor(true)"><h3 class="node_title">Nodes:</h3></div>
 
                 <div class="node">
                     <img src="img/error.svg" class="container_icon" style="float:right;"><img src="img/edit.svg" class="container_icon" style="float:right;">
@@ -91,18 +148,45 @@
             <!-- Right Panel -->
             <div class="vertical_sub_container">
                 
+                <!-- Node Editor -->
+                <div class="node" id="node_editor" hidden>
+
+                    <img src="img/return.svg" class="container_icon" onclick="close_node_editor()" style="float:right;">
+                    <h3 id="node_editor_title">Add Node</h3>
+
+                    <p>
+                    Node name:<br><input type="text" id="node_name"><br>
+                    Node path:<br><input type="text" id="node_path"><br>
+                    Node type:<br><select name="Node Type" id="node_type">
+                        <option value="file">File</option>
+                        <option value="link">Link</option>
+                        <option value="dir">Directory</option>
+                        <option value="input_dir">Input Directory</option>
+                        <option value="output_dir">Output Directory</option>
+                    </select><br>
+                    Programs:<br><select name="Associated Programs" id="node_programs" >
+                         <option value="">none</option>
+                         <option value="blender">Blender</option>
+                         <option value="opentoonz">OpenToonz</option>
+                     </select><br>
+                    <br>
+                    inport: <input type="number" id="inport" value="-1" title="-1 = none" style="width: 30px;"> outport: <input type="number" id="outport" value="-1" title="-1 = none" style="width: 30px;">
+                    </p>
+                    <div class="container_button" onclick="eel.add_node(document.getElementById('node_name').value, document.getElementById('node_path').value, document.getElementById('node_type').value, document.getElementById('node_programs').value, document.getElementById('inport').value, document.getElementById('outport').value, document.getElementById('node_editor_title').innerText)"><img src="img/check.svg" class="container_button_icon">Accept</div>
+
+                </div>
             </div>
 
 
             <!-- Scene editor -->
             <div class="floating_container" id="scene_editor" hidden>
-                <img src="img/return.svg" class="container_icon" onclick="close_scene_creator()" style="float:right;">
-                <h3 id="scene_editor_title">Create Scene</h3>
+                <img src="img/return.svg" class="container_icon" onclick="close_scene_editor()" style="float:right;">
+                <h3 id="scene_editor_title">Edit Scene</h3>
                 <p>
                 Scene name: <input type="text" id="scene_name"><br>
                 Scene root: <input type="text" id="scene_root">
                 </p>
-                <div class="container_button" onclick="eel.add_scene(document.getElementById('scene_name').value, document.getElementById('scene_root').value), eel.load_scene_editor(), close_scene_editor()"><img src="img/check.svg" class="container_button_icon">Accept</div>
+                <div class="container_button" onclick="eel.edit_scene(document.getElementById('scene_name').value, document.getElementById('scene_root').value), eel.load_scene_editor(), close_scene_editor()"><img src="img/check.svg" class="container_button_icon">Accept</div>
             </div>
             
 
