@@ -40,6 +40,11 @@ def set_open_member(member):
     # set currently open member
     Current.open_member = member.split(" | ")
 
+@eel.expose
+def set_open_scene(scene):
+
+    # set currently open member
+    Current.open_scene = scene
 
 @eel.expose
 def create_project_files():
@@ -368,7 +373,7 @@ def load_scene_overview():
         # root path
         root = project['scenes'][scene]['root']
         # add scene item
-        scenes += f"<div class='container_item' title='{scene}' onclick='link(urls.scene_editor), eel.set_open_member(this.title)'>"
+        scenes += f"<div class='container_item' title='{scene}' onclick='link(urls.scene_editor), eel.set_open_scene(this.title)'>"
         scenes += f"<img src='img/scene.svg' class='container_button_icon'>Scene: ({scene}) -- Dir: ({root}/{scene})</div>"
     
 
@@ -376,13 +381,9 @@ def load_scene_overview():
 
     # path variable to return to html
     path = projects[Current.open_project][0]
-    # check if dir length is greater than 0 and it links to a drive
-    if len(path) > 0 and path[1:3] == ":/":
-        # add / to end of path
-        if path[-1] != "/": path += "/"
 
     # make directory the full path
-    directory = path + directory
+    directory = os.path.join(path, directory).replace("\\", "/")
 
     # does path exist
     if os.path.exists(directory):
@@ -395,7 +396,68 @@ def load_scene_overview():
     
     print("Scene Overview loaded")
 
+@eel.expose
+def load_scene_editor():
 
+    scene = Current.open_projectfile["scenes"][Current.open_scene]
+
+    # set attributes
+    root = scene["root"]
+
+    # node container innerHTML
+    nodes = "<div class='node' style='background-color:rgba(0,0,0,0);'>"
+    # plus button
+    nodes += "<img src='img/plus.svg' class='container_icon' style='float:right;' onclick='open_node_creator()'><h3 class='node_title'>Nodes:</h3></div>"
+
+    # add members to team
+    for node in scene:
+
+        # ignore root node
+        if node != "root":
+
+            # buttons !!! ADD REMOVE AND NODE EDIT FUNCTIONALITY HERE !!!
+            nodes += "<img src='img/error.svg' class='container_icon' style='float:right;'><img src='img/edit.svg' class='container_icon' style='float:right;'>"
+            # check if directory exists
+            # node path
+            node_path = os.path.join(projects[Current.open_project][0], root, scene["root"], scene[node][1], node).replace("\\", "/")
+
+            # does path exist
+            if os.path.isdir(node_path):
+                nodes += f"<img src='img/folder.svg' title='{node_path}' onclick='eel.explore(this.title)' class='container_icon' style='float:right;'>"
+            else:
+                nodes += f"<img src='img/add_folder.svg' title='{node_path}' onclick='eel.explore(this.title)' class='container_icon' style='float:right;'>"
+            
+            # node name
+            nodes += f"<h3 class='node_title'>{node}</h3>"
+
+            # node data
+            nodes += f"<h3>Node Dir: {scene[node][0]}</h3>"
+            nodes += f"<h3>Node Type: {scene[node][1]}</h3>"
+
+            # programs
+            if scene[node][2] != "": nodes += f"<h3>Programs: {scene[node][2]}</h3>"
+
+            # ports
+            nodes += f"<label>{str(scene[node][3])}</label></div>"
+
+    # check if directory exists
+
+    # path variable to return to html
+    path = projects[Current.open_project][0]
+
+    # make directory the full path
+    directory = os.path.join(path, root, scene["root"]).replace("\\", "/")
+
+    # does path exist
+    if os.path.exists(directory):
+        path = 1
+    else:
+        path = 0
+
+    # update ui
+    eel.scene_editor(Current.open_scene, directory, path, nodes)
+    
+    print("Scene Editor loaded")
 
 
 # run eel if main

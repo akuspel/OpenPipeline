@@ -13,7 +13,9 @@ var urls = {
     member_editor: "member_editor.html",
 
     program_overview: "program_overview.html",
-    scene_overview: "scene_overview.html"
+    
+    scene_overview: "scene_overview.html",
+    scene_editor: "scene_editor.html"
 }
 
 // linking through divs
@@ -110,6 +112,32 @@ function scene_overview(directory, path, scenes) {
     }
     
     console.log("Scene Overview loaded")
+
+}
+
+// set up scene editor
+function scene_editor(scene, directory, path, nodes) {
+
+    // set project overview attributes
+    document.getElementById("scene").innerText = scene;
+    document.getElementById("scene_directory").innerText = directory;
+
+    document.getElementById("node_container").innerHTML = nodes;
+    
+    // does path exist
+    if (path == 1) {
+
+        // path exists, celebrate!!
+
+    } else {
+
+        // if path doesn't exist, make it possible to add
+        document.getElementById("folder_icon").src = "img/add_folder.svg";
+        document.getElementById("folder_icon").title = "Add Directory";
+        document.getElementById("scene_directory").style = "color:rgb(150,30,30); margin-left:20px;";
+    }
+    
+    console.log("Scene Editor loaded")
 
 }
 
